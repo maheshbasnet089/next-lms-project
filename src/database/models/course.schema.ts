@@ -12,7 +12,6 @@ const courseSchema = new Schema({
     courseDuration : {
         type : String
     }
-
 })
 
 const Course = mongoose.model("Course",courseSchema)
