@@ -1,9 +1,13 @@
 import dbConnect from "@/database/connection"
 import Category from "@/database/models/category.schema"
+import authMiddleware from "../../../../middleware/auth.middleware"
+import { NextRequest } from "next/server"
 
 
 export async function createCategory(req:Request){
     try {
+        const response = authMiddleware(req as NextRequest)
+        // if(response) return response
         await dbConnect()
         const {name,description} =  await req.json()
         // already exist or not 
@@ -30,8 +34,10 @@ export async function createCategory(req:Request){
     }
 }
 
-export async function getCategories(){
+export async function getCategories(req:NextRequest){
   try {
+    authMiddleware(req as NextRequest)
+    checkLoggedInOrNot()
     await dbConnect()
     const categories = await Category.find() // returns array , findOne --> re ob, findById --> re ob
     if(categories.length === 0 ){
