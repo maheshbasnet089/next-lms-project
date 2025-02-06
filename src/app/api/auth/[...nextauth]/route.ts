@@ -1,9 +1,10 @@
 import dbConnect from "@/database/connection";
 import User from "@/database/models/user.schema";
 import NextAuth, { Session } from "next-auth";
-import { AuthOptions } from "next-auth";
+import { } from "next-auth";
 import GoogleProvider from "next-auth/providers/google"
 
+//@ts-ignore
 export const authOptions:AuthOptions = {
     providers : [
         GoogleProvider({
@@ -16,7 +17,8 @@ export const authOptions:AuthOptions = {
        async signIn({user}:{user : {name : string, email : string, image : string}}) : Promise<boolean>{
             try {
                 await dbConnect()
-               const existingUser = await User.findOne({email : user.email}) // return object {username : "sdfdf",email:"sdf"} , {}
+               const existingUser = await User.findOne({email : user.email}) // return object {username : "sdfdf",email:"sdf"} , {}\
+            
                if(!existingUser){
                 await User.create({
                     username : user.name, 
@@ -38,5 +40,6 @@ export const authOptions:AuthOptions = {
         }
     }
 }
+//@ts-ignore
 const handler = NextAuth(authOptions)
 export {handler as GET, handler as POST}
