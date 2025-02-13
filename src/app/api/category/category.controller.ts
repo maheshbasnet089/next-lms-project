@@ -34,10 +34,8 @@ export async function createCategory(req:Request){
     }
 }
 
-export async function getCategories(req:NextRequest){
+export async function getCategories(){
   try {
-    authMiddleware(req as NextRequest)
-    checkLoggedInOrNot()
     await dbConnect()
     const categories = await Category.find() // returns array , findOne --> re ob, findById --> re ob
     if(categories.length === 0 ){
