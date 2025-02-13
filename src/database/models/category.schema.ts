@@ -1,9 +1,10 @@
 import mongoose,{Schema} from "mongoose";
 
-interface ICategory extends Document{
+export interface ICategory extends Document{
+    _id : string, 
     name : string, 
     description?: string, 
-    createdAt : Date
+    createdAt : Date 
 }
 
 const categorySchema = new Schema<ICategory>({
