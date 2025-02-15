@@ -1,6 +1,7 @@
 "use client"
 import { ICategory } from "@/database/models/category.schema"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import Modal from "../components/modal/Modal"
 
 
 
@@ -14,16 +15,24 @@ async function fetchCategories(){
   console.log(error)
  }
 }
-async function Categories(){
+ function Categories(){
   const [isModalOpen, setIsModalOpen] = useState(false)
-   const {data:categories} = await fetchCategories()
-   
+  const [categories,setCategories] = useState([])
+ 
    const openModal = () => setIsModalOpen(true)
    const closeModal = ()=>setIsModalOpen(false)
    console.log(isModalOpen)
+   useEffect( ()=>{
+    const getCategories = async ()=>{
+     const {data} =  await fetchCategories()
+     setCategories(data)
+    }
+    getCategories()
+   },[])
     return ( 
    <div className="flex flex-col">
   <div className=" overflow-x-auto">
+    {isModalOpen && <Modal closeModal={closeModal}  />}
     <div className="min-w-full inline-block align-middle">
       <div className="relative  text-gray-500 focus-within:text-gray-900 mb-4">
         <div className="absolute inset-y-0 left-1 flex items-center pl-3 pointer-events-none ">

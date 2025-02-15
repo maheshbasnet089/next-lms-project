@@ -6,7 +6,7 @@ import { NextRequest } from "next/server"
 
 export async function createCategory(req:Request){
     try {
-        const response = authMiddleware(req as NextRequest)
+        // const response = authMiddleware(req as NextRequest)
         // if(response) return response
         await dbConnect()
         const {name,description} =  await req.json()
@@ -34,7 +34,7 @@ export async function createCategory(req:Request){
     }
 }
 
-export async function getCategories(req:NextRequest){
+export async function getCategories(){
   try {
     // authMiddleware(req as NextRequest)
     // checkLoggedInOrNot()
