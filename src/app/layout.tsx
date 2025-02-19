@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import SessionWrapper from "@/components/SessionWrapper";
+import { Provider } from "react-redux";
+import StoreProvider from "./StoreProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,13 +30,16 @@ export default function RootLayout({
 }>) {
   
   return (
+
    <SessionWrapper>
      <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-  
+        >
+   <StoreProvider>
+
         {children}
+   </StoreProvider>
  
       </body>
     </html>
