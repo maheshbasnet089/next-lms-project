@@ -2,32 +2,22 @@
 import { ICategory } from "@/database/models/category.schema"
 import { useEffect, useState } from "react"
 import Modal from "../components/modal/Modal"
+import { fetchCategories } from "@/store/category/categorySlice"
+import { useAppDispatch, useAppSelector } from "@/store/hooks"
 
 
 
-async function fetchCategories(){
 
- try {
-  const response = await fetch("http://localhost:3000/api/category")
-  if(!response.ok) throw new Error("Failed to fetch categories, something went wrong")
-  return response.json()
- } catch (error) {
-  console.log(error)
- }
-}
  function Categories(){
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [categories,setCategories] = useState([])
- 
+
+  const dispatch = useAppDispatch()
+   const {categories} = useAppSelector((store)=>store.categories)
    const openModal = () => setIsModalOpen(true)
    const closeModal = ()=>setIsModalOpen(false)
    console.log(isModalOpen)
    useEffect( ()=>{
-    const getCategories = async ()=>{
-     const {data} =  await fetchCategories()
-     setCategories(data)
-    }
-    getCategories()
+    dispatch(fetchCategories())
    },[])
     return ( 
    <div className="flex flex-col">
@@ -60,7 +50,7 @@ async function fetchCategories(){
           </thead>
           <tbody className="divide-y divide-gray-300 ">
            {
-            categories.length > 0 && categories.map((category:ICategory)=>{
+            categories.length > 0 && categories.map((category)=>{
               return ( 
                 <tr key={category._id} className="bg-white transition-all duration-500 hover:bg-gray-50">
                 <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 ">{category._id}</td>
