@@ -1,5 +1,7 @@
 "use client";
-import { useState } from "react";
+import { addCategory } from "@/store/categorySlice";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { useEffect, useState } from "react";
 
 interface ModalProps {
   isOpen?: boolean;
@@ -10,6 +12,8 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
+  const dispatch = useAppDispatch()
+  const {status,categories} = useAppSelector((store)=>store.categories)
 
   const handleSubmit = async () => {
     if (!name || !description) {
@@ -20,32 +24,21 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:3000/api/category", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, description }),
-      });
-
-      if (response.ok) {
-        alert("Category added successfully");
-        setName("");
-        setDescription("");
-        onClose(); // Close the modal after success
-      } else {
-        alert("Failed to add category");
-      }
+       dispatch(addCategory({name,description}))
     } catch (error) {
       console.error("Error:", error);
       alert("An error occurred. Please try again.");
-    } finally {
-      setLoading(false);
     }
   };
 
   if (!isOpen) return null;
-
+  console.log(status)
+  useEffect(()=>{
+    if(status === "success"){
+      setLoading(false)
+      onClose()
+    }
+  },[status])
   return (
     <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-lg">

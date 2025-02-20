@@ -4,7 +4,7 @@ import { ICategory } from "@/database/models/category.schema";
 import Modal from "../components/modal/modal";
 import { useState, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { fetchCategories } from "@/store/categorySlice";
+import { deleteCategory, fetchCategories } from "@/store/categorySlice";
 
 
 
@@ -12,6 +12,7 @@ export default function Categories() {
   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const {categories} = useAppSelector((store)=>store.categories)
+  console.log(categories,"Categories")
   const dispatch = useAppDispatch()
 
   useEffect(() => {
@@ -21,6 +22,11 @@ export default function Categories() {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
   console.log(categories)
+  const handleDelete = (id:string)=>{
+    if(id){
+      dispatch(deleteCategory(id))
+    }
+  }
 
   return (
     <div className="flex flex-col">
@@ -53,14 +59,14 @@ export default function Categories() {
               </thead>
               <tbody className="divide-y divide-gray-300">
                 {categories.length > 0 ? (
-                  categories.map((category: ICategory) => (
+                  categories.map((category) => (
                     <tr key={category._id} className="bg-white hover:bg-gray-50">
                       <td className="p-5 text-sm font-medium text-gray-900">{category.name}</td>
                       <td className="p-5 text-sm text-gray-900">{category.description}</td>
                       <td className="p-5 text-sm text-gray-900">Customer</td>
                       <td className="p-5 text-sm text-gray-900">Accessories</td>
                       <td className="p-5">
-                        <button className="p-2 text-indigo-500 hover:underline">Edit</button>
+                        <button className="p-2 text-indigo-500 hover:underline" onClick={()=>handleDelete(category._id)}>Delete</button>
                       </td>
                     </tr>
                   ))
