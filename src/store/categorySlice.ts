@@ -29,8 +29,15 @@ const categorySlice = createSlice({
         setStatus(state,action){
             state.status = action.payload
         }, 
+        resetStatus(state){
+            state.status = "loading"
+        },
+        addCategory(state,action){
+            state.categories.push(action.payload)
+        },
         setDeleteCategory(state,action:PayloadAction<string>){
             const index = state.categories.findIndex(item=>item._id == action.payload)
+            console.log(index,"Index")
             if(index !== -1){
             state.categories.splice(index,1)
             }
@@ -39,7 +46,7 @@ const categorySlice = createSlice({
     }
 })
 
-const {setCategories,setStatus,addCategory: addCategorys} = categorySlice.actions
+export const {setCategories,setStatus,addCategory: addCategorys,resetStatus, setDeleteCategory} = categorySlice.actions
 export default categorySlice.reducer
 
 export function fetchCategories(){
@@ -80,7 +87,7 @@ export function deleteCategory(id:string){
             const res = await API.delete("category/" + id);
             if(res.status == 200){
                 dispatch(setStatus("success"))
-                dispatch(deleteCategory(res.data.data))
+                dispatch(setDeleteCategory(res.data.data))
             }else{
                 dispatch(setStatus("error"))
             }

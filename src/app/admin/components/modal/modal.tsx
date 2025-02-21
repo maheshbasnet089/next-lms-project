@@ -1,5 +1,5 @@
 "use client";
-import { addCategory } from "@/store/categorySlice";
+import { addCategory, resetStatus } from "@/store/categorySlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { useEffect, useState } from "react";
 
@@ -32,13 +32,13 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   };
 
   if (!isOpen) return null;
-  console.log(status)
   useEffect(()=>{
     if(status === "success"){
       setLoading(false)
-      onClose()
+      onClose(); 
+      dispatch(resetStatus())
     }
-  },[status])
+  },[status,onClose,dispatch])
   return (
     <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-lg">

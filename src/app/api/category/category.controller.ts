@@ -59,14 +59,21 @@ export async function getCategories(){
 }
 export async function deleteCategory(id:string){
     try {
-        await Category.findByIdAndDelete(id)
+        await dbConnect()
+        const deletedCategory = await Category.findByIdAndDelete(id);
+        
+        if (!deletedCategory) {
+            return Response.json({
+                message : "Something went wrong"
+            },{status:400})
+        }
         return Response.json({
             message : "Category deleted Sucessfully", 
             data : id
-        })
+        },{status:200})
     } catch (error) {
         return Response.json({
             message : error.message
-        })
+        },{status:500})
     }
 }

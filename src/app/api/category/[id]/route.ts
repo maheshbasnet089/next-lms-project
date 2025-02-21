@@ -1,12 +1,10 @@
 import { deleteCategory } from "../category.controller";
 
 
-export async function DELETE(request:Request,urlBataAakoData:Promise<{params:{id:string}}>){
-    const ids = (await urlBataAakoData).params
-    const id =   ids.id
-    console.log(id,"ID")
-    if(id){
+export async function DELETE(request:Request,{params} :{params:{id:string}} ){
+    const {id} =  await params
+    // console.log(id,"ID")
 
-        return await deleteCategory(id)
-    }
+        return deleteCategory(id)
+
 } 
