@@ -17,12 +17,13 @@ export async function createCategory(req:Request){
                 message : "Category already existed with that name !!"
             },{status:400})
         }
-        await Category.create({
+        const category = await Category.create({
             name,
             description
         })
         return Response.json({
-            message : "Category created successfully !"
+            message : "Category created successfully !", 
+            data : category
         },{
             status : 201
         })
@@ -57,4 +58,26 @@ export async function getCategories(){
         messsage : "Something went wrong!!"
     },{status:500})
   }
+}
+
+
+export async function deleteCategory(id:string){
+    try {
+    await dbConnect()
+     const deleted = await Category.findByIdAndDelete(id)
+     if(!deleted){
+        return Response.json({
+            message : "Something went wrong"
+        },{status : 400})
+     }
+     return Response.json({
+        message : "category deleted succcessfully"
+     },{status:200})
+
+    } catch (error) {
+        console.log(error)
+        return Response.json({
+            message : "Something went wrong"
+        },{status : 500})
+    }
 }

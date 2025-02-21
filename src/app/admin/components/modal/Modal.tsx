@@ -1,5 +1,8 @@
 "use client"
-import { ChangeEvent, useState } from "react"
+import { createCategory, resetStatus } from "@/store/category/categorySlice"
+import { Status } from "@/store/category/types"
+import { useAppDispatch, useAppSelector } from "@/store/hooks"
+import { ChangeEvent, useEffect, useState } from "react"
 
 interface IModalProps{
   closeModal : ()=>void, 
@@ -9,31 +12,21 @@ const Modal:React.FC<IModalProps> =  ({closeModal})=>{
   const [name,setName] = useState<string>("")
   const [description,setDescription] = useState<string>("")
   const [loading,setLoading] = useState(false)
-
+  const dispatch = useAppDispatch()
+  const {status} = useAppSelector((store)=>store.categories)
+ console.log(status, "Status coming from slice")
   const handleSubmit = async (e:ChangeEvent<HTMLFormElement>)=>{
     e.preventDefault()
     setLoading(true)
-    try {
-      const response = await fetch("http://localhost:3000/api/category",{
-      method : "POST", 
-      headers : {
-        "Content-Type" : "application/json"
-      }, 
-      body :JSON.stringify({ name, description })
-    })
-    if(response.ok){
-      alert("Category added successfully")
-      closeModal()
-    }else{
-      alert("Something went wrong")
-    }
-    } catch (error) {
-      console.log(error)
-    } finally{
-      setLoading(false)
-    }
+    dispatch(createCategory({name,description}))
   }
-
+  useEffect(()=>{
+    if(status === Status.Success){
+      setLoading(false)
+      closeModal(); 
+      dispatch(resetStatus())
+    }
+  },[status])
     return( 
        <div id="modal" className="fixed inset-0 z-50 flex items-center justify-center">
   <div className="fixed inset-0 bg-black/50" />

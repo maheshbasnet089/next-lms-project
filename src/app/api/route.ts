@@ -9,7 +9,7 @@ export async function POST(){
         username : "Manish123", 
         googleId : "12423487879234", 
         profileImage : "thisisimage"
-    }) 
+}) 
 
    
     return Response.json({
