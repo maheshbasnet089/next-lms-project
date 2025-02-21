@@ -69,7 +69,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks"
                 <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 ">{category._id}</td>
                 <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900"> {category.name} </td>
                 <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900"> {category.description || "No desc"}</td>
-                <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900"> {category.createdAt.toString()}</td>
+                <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900"> {new Date(category.createdAt.toString()).toLocaleDateString()}</td>
                 <td className=" p-5 ">
                   <div className="flex items-center gap-1">
                     <button className="p-2  rounded-full  group transition-all duration-500  flex item-center">
