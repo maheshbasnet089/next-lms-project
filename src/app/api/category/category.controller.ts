@@ -9,6 +9,10 @@ export async function createCategory(req:Request){
         // const response = authMiddleware(req as NextRequest)
         // if(response) return response
         await dbConnect()
+            // Run authentication check
+            const authResponse = await authMiddleware(req as NextRequest);
+            console.log(authResponse)
+            if (authResponse) return authResponse; // Block unauthorized requests
         const {name,description} =  await req.json()
         // already exist or not 
         const existingCategory = await Category.findOne({name : name})
