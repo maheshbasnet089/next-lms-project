@@ -3,6 +3,7 @@ import {signIn, signOut, useSession} from "next-auth/react"
 import Image from "next/image"
 function Home(){
    const {data:session} =  useSession() // useSelector() --> select * from users
+   console.log(session)
    if(session){
     return(
       <>

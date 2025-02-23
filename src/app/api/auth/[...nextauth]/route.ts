@@ -26,18 +26,33 @@ export const authOptions:AuthOptions = {
                     profileImage : user.image,
                 })
             }
+            console.log(existingUser,"EU")
             return true
             } catch (error) {
                 console.log(error)
                 return false
             }
         }, 
-       async session({session,user}:{session:Session,user:any}){
-           const data =  await User.findById(user.id) // select * from users where id = 1 return object 
-           session.user.role = data?.role || "student"
-           return session
-        
-        }
+        async jwt({ token }) {
+            console.log("TOKEN",token)
+            await dbConnect();
+            const user = await User.findOne({ email: token.email });
+
+            if (user) {
+                token.id = user._id;
+                token.role = user.role || "student"; // Ensure default role
+            }
+            return token;
+        },
+             // Session callback - modifies session returned to frontend
+             async session({ session, token }) {
+                if (token) {
+                    session.user.id = token.id;
+                    session.user.role = token.role || "student"; // Use role from JWT
+                }
+                return session;
+            },
+    
     }
 }
 //@ts-ignore

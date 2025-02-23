@@ -4,7 +4,7 @@
 
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { Role } from "@/database/models/user.schema";
-import { getServerSession } from "next-auth";
+import { getServerSession } from "next-auth/next";
 import { NextRequest, NextResponse } from "next/server";
 
 
