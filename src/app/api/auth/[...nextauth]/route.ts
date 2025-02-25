@@ -4,6 +4,7 @@ import NextAuth, { Session } from "next-auth";
 import { } from "next-auth";
 import GoogleProvider from "next-auth/providers/google"
 
+interface IToken{name : string,email:string,picture:string,sub:string,id:string,role:string}
 //@ts-ignore
 export const authOptions:AuthOptions = {
     providers : [
@@ -32,10 +33,25 @@ export const authOptions:AuthOptions = {
                 return false
             }
         }, 
-       async session({session,user}:{session:Session,user:any}){
-           const data =  await User.findById(user.id) // select * from users where id = 1 return object 
-           session.user.role = data?.role || "student"
-           return session
+      async jwt({token}:{token : IToken}){
+        await dbConnect()
+        const user = await User.findOne({
+            email : token.email
+        })
+        console.log(user,"USER")
+        if(user){
+            token.id = user._id
+            token.role = user.role
+        }
+        return token 
+      },
+       async session({session,token}:{session:Session,token:IToken}){
+           if(token){
+            session.user.id = token.id; 
+            session.user.role = token.role 
+           }
+          
+           return session;
         
         }
     }
