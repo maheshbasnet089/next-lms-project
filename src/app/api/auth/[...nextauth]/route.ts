@@ -46,7 +46,7 @@ export const authOptions:AuthOptions = {
         }
         return token 
       },
-       async session({session,token}:{session:Session,token:IToken}){
+       async session({session,token}:{session:any,token:IToken}){
            if(token){
             session.user.id = token.id; 
             session.user.role = token.role 
