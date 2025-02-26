@@ -20,10 +20,23 @@ const courseSlice = createSlice({
         }, 
         setCourses(state:IInitialData,action:PayloadAction<ICourse[]>){
             state.courses = action.payload
-        }
+        }, 
+        pushToCourses(state:IInitialData,action:PayloadAction<ICourse>){
+            state.courses.push(action.payload)
+        }, 
+        deleteCourseByIndex(state:IInitialData,action:PayloadAction<string>){
+            const index =   state.courses.findIndex((course)=>course._id == action.payload)
+            if(index !== -1){
+              state.courses.splice(index,1)
+            }
+          }, 
+          resetStatus(state){
+            state.status = Status.Loading
+        }, 
+
     }
 })
-const {setCourses,setStatus} = courseSlice.actions
+const {setCourses,setStatus,pushToCourses,deleteCourseByIndex,resetStatus} = courseSlice.actions
 export default courseSlice.reducer
 
 export function fetchCourses(){
@@ -31,7 +44,6 @@ export function fetchCourses(){
         try {
             const response = await API.get("/course")
             if(response.status == 200){
-                dispatch(setStatus(Status.Success))
                 dispatch(setCourses(response.data.data))
             }else{
                 dispatch(setStatus(Status.Error))
@@ -50,7 +62,7 @@ export function createCourse(data:ICourseForData){
             const response = await API.post("/course",data)
             if(response.status == 201){
                 dispatch(setStatus(Status.Success))
-                // dispatch(setCourses(response.data.data))
+                dispatch(pushToCourses(response.data.data))
             }else{
                 dispatch(setStatus(Status.Error))
             }
@@ -60,3 +72,20 @@ export function createCourse(data:ICourseForData){
         }
     }
 }
+
+export function deleteCourse(id:string){
+    return async function deleteCourseThunk(dispatch:AppDispatch){
+        try {
+            const response = await API.delete("/course/" + id)
+            if(response.status == 200){
+                dispatch(deleteCourseByIndex(id))
+            }else{
+                dispatch(setStatus(Status.Error))
+            }
+        } catch (error) {
+            console.log(error)
+            dispatch(setStatus(Status.Error))
+        }
+    }
+}
+

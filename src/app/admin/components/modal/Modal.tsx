@@ -14,7 +14,7 @@ const Modal:React.FC<IModalProps> =  ({closeModal})=>{
   const [loading,setLoading] = useState(false)
   const dispatch = useAppDispatch()
   const {status} = useAppSelector((store)=>store.categories)
- console.log(status, "Status coming from slice")
+
   const handleSubmit = async (e:ChangeEvent<HTMLFormElement>)=>{
     e.preventDefault()
     setLoading(true)

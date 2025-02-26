@@ -1,11 +1,19 @@
 import { Status } from "../category/types"
 
+
+interface ICategory{
+    _id : string, 
+    name : string, 
+    description : string, 
+    createdAt : string 
+}
 export interface ICourseForData{
     title : string, 
     description : string, 
     price : number, 
-    category : string, 
+    category : ICategory | string, 
     duration : string,
+    _id ?: string 
 }
 
 export interface ICourse extends ICourseForData{
