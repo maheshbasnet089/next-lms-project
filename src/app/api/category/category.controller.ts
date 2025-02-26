@@ -9,10 +9,11 @@ export async function createCategory(req:Request){
         // const response = authMiddleware(req as NextRequest)
         // if(response) return response
         await dbConnect()
-            // Run authentication check
-            const authResponse = await authMiddleware(req as NextRequest);
-            console.log(authResponse)
-            if (authResponse) return authResponse; // Block unauthorized requests
+        const response = await authMiddleware(req as NextRequest)
+        if(response.status === 401){
+            return response;
+        }
+
         const {name,description} =  await req.json()
         // already exist or not 
         const existingCategory = await Category.findOne({name : name})
@@ -65,9 +66,13 @@ export async function getCategories(){
 }
 
 
-export async function deleteCategory(id:string){
+export async function deleteCategory(req:Request,id:string){
     try {
     await dbConnect()
+    const response = await authMiddleware(req as NextRequest)
+    if(response.status === 401){
+        return response;
+    }
      const deleted = await Category.findByIdAndDelete(id)
      if(!deleted){
         return Response.json({
