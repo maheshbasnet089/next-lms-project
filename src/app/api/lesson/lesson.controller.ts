@@ -1,5 +1,4 @@
 import dbConnect from "@/database/connection";
-import Course from "@/database/models/course.schema";
 import Lesson from "@/database/models/lesson.schema";
 
 
@@ -7,7 +6,7 @@ export async function createLesson(req:Request){
     try {
         await dbConnect()
         const {title,description,videoUrl,course} = await req.json()
-        const data = await Course.create({
+        const data = await Lesson.create({
             title, 
             description , 
             videoUrl, 
@@ -26,17 +25,20 @@ export async function createLesson(req:Request){
     }
 }
 
-export async function fetchLessons(){
+export async function fetchLessons(req:Request){
     try {
         await dbConnect()
-        const data = await Lesson.find().populate("course") // return array []
+        const {courseId} = await req.json()
+        const data = await Lesson.find({
+            course : courseId
+        }).populate("course") // return array []
         if(data.length === 0){
             return Response.json({
-                message : "no course found"
+                message : "no lessons found"
             },{status:404})
         }
         return Response.json({
-            message : "courses fetched!!", 
+            message : "lessons fetched!!", 
             data
         },{status:200})
     } catch (error) {
@@ -52,11 +54,11 @@ export async function fetchLesson(id:string){
         const data = await Lesson.findById(id) // returns in object
         if(!data){
             return Response.json({
-                message : "no course with that id found"
+                message : "no lesson with that id found"
             },{status:404})
         }
         return Response.json({
-            message : "courses fetched!!", 
+            message : "lessons fetched!!", 
             data
         },{status:200})
     } catch (error) {
