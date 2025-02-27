@@ -28,13 +28,17 @@ export async function createLesson(req:Request){
 export async function fetchLessons(req:Request){
     try {
         await dbConnect()
-        const {courseId} = await req.json()
+        const {searchParams} = new URL(req.url)
+        const courseId = searchParams.get("courseId")
+        
+        console.log(courseId,"IUD")
         const data = await Lesson.find({
-            course : courseId
+            course:courseId
         }).populate("course") // return array []
         if(data.length === 0){
             return Response.json({
-                message : "no lessons found"
+                message : "no lessons found", 
+                data : []
             },{status:404})
         }
         return Response.json({

@@ -29,12 +29,7 @@ function AdminSidebar(){
             </svg>
             Courses
           </Link>
-          <Link href="/admin/lessons" className="flex items-center px-4 py-2 mt-2 text-gray-100 hover:bg-gray-700">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-            </svg>
-            Lessons
-          </Link>
+     
         </nav>
       </div>
     )

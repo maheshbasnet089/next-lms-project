@@ -21,7 +21,7 @@ const lessonSlice = createSlice({
         }, 
         pushToLessons(state:IInitialData,action:PayloadAction<ILesson>){
             state.lessons.push(action.payload)
-        }, 
+        },
         deleteLessonByIndex(state:IInitialData,action:PayloadAction<string>){
             const index =   state.lessons.findIndex((lesson)=>lesson._id == action.payload)
             if(index !== -1){
@@ -40,13 +40,16 @@ export default lessonSlice.reducer
 export function fetchLessons(id:string){
     return async function fetchLessonsThunk(dispatch:AppDispatch){
         try {
-            const response = await API.get("/lesson",{courseId : id})
+            const response = await API.get("/lesson?courseId=" + id)
             if(response.status == 200){
                 dispatch(setLessons(response.data.data))
             }else{
+                // console.log("Triggered inside else condition")
+                // dispatch(resetLessonArray())
                 dispatch(setStatus(Status.Error))
             }
         } catch (error) {
+            dispatch(setLessons([]))
             console.log(error)
             dispatch(setStatus(Status.Error))
         }
