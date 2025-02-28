@@ -1,4 +1,5 @@
 "use client"
+import { fetchEnrollements } from "@/store/enrollments/enrollmentSlice"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { fetchStudents } from "@/store/students/studentSlice"
 import { useEffect, useState } from "react"
@@ -8,11 +9,11 @@ import { useEffect, useState } from "react"
 function Students(){
   const dispatch = useAppDispatch()
   const [searchTerm,setSearchTerm] = useState<string>("")
-  const {students} = useAppSelector((store)=>store.students)
+  const {enrollments} = useAppSelector((store)=>store.enrollments)
   useEffect(()=>{
-    dispatch(fetchStudents())
+    dispatch(fetchEnrollements())
   },[])
-  const filteredStudents = students.filter((student)=>student.username.toLowerCase().includes(searchTerm.toLowerCase()) || student.email.toLowerCase().includes(searchTerm.toLowerCase()))
+//   const filteredStudents = enrollments.filter((enrollment)=>enrollment..toLowerCase().includes(searchTerm.toLowerCase()) || student.email.toLowerCase().includes(searchTerm.toLowerCase()))
     return (
         <div className="flex flex-col">
         <div className=" overflow-x-auto">
@@ -25,28 +26,30 @@ function Students(){
                   <path d="M17.5 17.5L15.4167 15.4167M15.8333 9.16667C15.8333 5.48477 12.8486 2.5 9.16667 2.5C5.48477 2.5 2.5 5.48477 2.5 9.16667C2.5 12.8486 5.48477 15.8333 9.16667 15.8333C11.0005 15.8333 12.6614 15.0929 13.8667 13.8947C15.0814 12.6872 15.8333 11.0147 15.8333 9.16667Z" stroke="black" strokeOpacity="0.2" strokeWidth="1.6" strokeLinecap="round" />
                 </svg>
               </div>
-              <input type="text" onChange={(e)=>setSearchTerm(e.target.value)} id="default-search" className="block w-80 h-11 pr-5 pl-12 py-2.5 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-full placeholder-gray-400 focus:outline-none" placeholder="Search" />
+              {/* <input type="text" onChange={(e)=>setSearchTerm(e.target.value)} id="default-search" className="block w-80 h-11 pr-5 pl-12 py-2.5 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-full placeholder-gray-400 focus:outline-none" placeholder="Search" /> */}
             </div>
             <div className="overflow-hidden ">
               <table className=" min-w-full rounded-xl">
                 <thead>
                   <tr className="bg-gray-50">
                     <th scope="col" className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize rounded-t-xl"> Student ID </th>
-                    <th scope="col" className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"> UserName </th>
-                    <th scope="col" className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"> Email </th>
-                    <th scope="col" className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"> Profile </th>
+                    <th scope="col" className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"> Student UserName </th>
+                    <th scope="col" className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"> Course Name </th>
+                    <th scope="col" className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"> Enrollment Status </th>
+                    <th scope="col" className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"> Whatsapp No </th>
                     <th scope="col" className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize rounded-t-xl"> Actions </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-300 ">
                {
-                filteredStudents.length > 0 && filteredStudents.map((student)=>{
+                enrollments.length > 0 && enrollments.map((enrollment)=>{
                   return ( 
-                       <tr key={student?._id} className="bg-white transition-all duration-500 hover:bg-gray-50">
-                    <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 ">{student?._id} </td>
-                    <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900"> {student?.username} </td>
-                    <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900"> {student?.email}</td>
-                    <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900"> {student?.profileImage}</td>
+                       <tr key={enrollment?._id} className="bg-white transition-all duration-500 hover:bg-gray-50">
+                    <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 ">{enrollment.student?._id} </td>
+                    <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900"> {enrollment.student?.username} </td>
+                    <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900"> {enrollment?.course?.title}</td>
+                    <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900"> {enrollment?.enrollmentStatus}</td>
+                    <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900"> {enrollment?.whatsapp}</td>
                     <td className=" p-5 ">
                       <div className="flex items-center gap-1">
                         <button className="p-2  rounded-full  group transition-all duration-500  flex item-center">

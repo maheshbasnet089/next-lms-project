@@ -1,10 +1,11 @@
 import Dashboard from "@/components/dashboard/Dashboard";
 
 
-function Admin(){
+function Student(){
+
     return ( 
-        <Dashboard />
+        <h1>Student Dashboard</h1>
     )
 }
 
-export default Admin
+export default Student
