@@ -1,6 +1,7 @@
 import dbConnect from "@/database/connection";
 import Course from "@/database/models/course.schema";
 import Lesson from "@/database/models/lesson.schema";
+import mongoose from "mongoose";
 
 
 export async function createCourse(req:Request){
@@ -31,7 +32,8 @@ export async function createCourse(req:Request){
 export async function fetchCourses(){
     try {
         await dbConnect()
-        const data = await Course.find() // return array []
+        console.log(mongoose.models.Category,"MMC")
+        const data = await Course.find().populate("category") // return array []
         if(data.length === 0){
             return Response.json({
                 message : "no course found"

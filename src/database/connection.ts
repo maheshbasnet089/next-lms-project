@@ -9,6 +9,8 @@ if(!MONGODB_CS){
 const dbConnect = async ()=>{
     if(mongoose.connection.readyState === 1){
         console.log("Database already connected!!")
+        // console.log(mongoose.models.Category,"MMC")
+
         return;
     }
     try {

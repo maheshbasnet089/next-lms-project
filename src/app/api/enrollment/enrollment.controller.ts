@@ -2,18 +2,30 @@ import dbConnect from "@/database/connection";
 import Course from "@/database/models/course.schema";
 import Enrollment from "@/database/models/enrollment.schema";
 import Lesson from "@/database/models/lesson.schema";
+import Payment, { PaymentMethod } from "@/database/models/payment.schema";
 
 
 export async function enrollCourse(req:Request){
     try {
         await dbConnect()
         
-        const {course,whatsapp} = await req.json()
+        const {course,whatsapp,paymentMethod} = await req.json()
         const data = await Enrollment.create({
             whatsapp,
             course, 
             student : "11"// session.user.id
         })
+        const courseData = await Course.findById(course)
+        if(paymentMethod === PaymentMethod.Esewa){
+
+        }else{
+            // khalti 
+            await Payment.create({
+                enrollment : data._id, 
+                amount : courseData.price, 
+                paymentMethod : PaymentMethod.Khalti
+            })
+        }
         return Response.json({
             message : "You enrolled the course", 
             data 

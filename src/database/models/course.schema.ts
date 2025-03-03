@@ -1,4 +1,6 @@
 import mongoose, { Schema } from 'mongoose'
+import Category from './category.schema'
+
 
 interface ICourse extends Document{
     title : string, 
@@ -27,10 +29,10 @@ const courseSchema = new Schema<ICourse>({
         type : String, 
         required : true
     }, 
-    // category : {
-    //     type : Schema.Types.ObjectId, 
-    //     ref : "Category"
-    // }, 
+    category : {
+        type : Schema.Types.ObjectId, 
+        ref : "Category"
+    }, 
     // lessons : [
     //     {
     //         type : Schema.Types.ObjectId, 

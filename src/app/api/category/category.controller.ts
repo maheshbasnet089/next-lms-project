@@ -90,3 +90,33 @@ export async function deleteCategory(req:Request,id:string){
         },{status : 500})
     }
 }
+
+export async function editCategory(req:Request, id : string){
+    try {
+        // const response = authMiddleware(req as NextRequest)
+        // if(response) return response
+        await dbConnect()
+        const response = await authMiddleware(req as NextRequest)
+        if(response.status === 401){
+            return response;
+        }
+
+        const {name,description} =  await req.json()
+        // already exist or not 
+      const newEditCategory =   await Category.findByIdAndUpdate(id,{
+            name : name, 
+            description : description
+        },{new:true})
+        return Response.json({
+            message : "Category edit successfully !", 
+            data : newEditCategory
+        },{
+            status : 201
+        })
+    } catch (error) {
+        console.log(error)
+        return Response.json({
+            messsage : "Something went wrong!!"
+        },{status:500})
+    }
+}
