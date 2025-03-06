@@ -95,19 +95,3 @@ export function deleteCourse(id:string){
     }
 }
 
-export function enrollCourse(data:IEnrollmentData){
-    return async function enrollCourseThunk(dispatch:AppDispatch){
-        try {
-            const response = await API.post("/enrollment",data)
-            if(response.status == 201){
-                dispatch(setStatus(Status.Success))
-                // dispatch(pushToCourses(response.data.data))
-            }else{
-                dispatch(setStatus(Status.Error))
-            }
-        } catch (error) {
-            console.log(error)
-            dispatch(setStatus(Status.Error))
-        }
-    }
-}

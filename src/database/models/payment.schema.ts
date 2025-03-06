@@ -40,5 +40,5 @@ const paymentSchema = new Schema<IPayment>({
     }
 })
 
-const Payment = mongoose.model("Payment",paymentSchema) || mongoose.models.Payment 
+const Payment = mongoose.models?.Payment || mongoose.model("Payment",paymentSchema) 
 export default Payment

@@ -3,32 +3,62 @@ import Course from "@/database/models/course.schema";
 import Enrollment from "@/database/models/enrollment.schema";
 import Lesson from "@/database/models/lesson.schema";
 import Payment, { PaymentMethod } from "@/database/models/payment.schema";
+import axios from "axios";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../auth/[...nextauth]/route";
+import authMiddleware from "../../../../middleware/auth.middleware";
+import { NextRequest } from "next/server";
 
 
 export async function enrollCourse(req:Request){
     try {
         await dbConnect()
-        
+        const response = await authMiddleware(req as NextRequest)
+        if(response.status === 401){
+            return response;
+        }
+        const session = await getServerSession(authOptions)
+        console.log(session.user,"SESSION")
+        const studentId = session.user.id
         const {course,whatsapp,paymentMethod} = await req.json()
-        const data = await Enrollment.create({
+        const enrollmentData = await Enrollment.create({
             whatsapp,
             course, 
-            student : "11"// session.user.id
+            student : studentId// session.user.id
         })
         const courseData = await Course.findById(course)
+        let paymentUrl;
         if(paymentMethod === PaymentMethod.Esewa){
 
         }else{
+            const data = {
+                return_url : "http://localhost:3000", 
+                website_url : "http://localhost:3000", 
+                amount : courseData.price * 100, 
+                purchase_order_id : enrollmentData._id, 
+                purchase_order_name : "order_" + enrollmentData._id
+
+            }
             // khalti 
+            const response =  await axios.post("https://a.khalti.com/api/v2/epayment/initiate/",data,{
+                headers : {
+                  Authorization : "Key b71142e3f4fd4da8acccd01c8975be38"
+                }
+              })
+
+             paymentUrl = response.data.payment_url
             await Payment.create({
-                enrollment : data._id, 
+                enrollment : enrollmentData._id, 
                 amount : courseData.price, 
                 paymentMethod : PaymentMethod.Khalti
             })
         }
         return Response.json({
             message : "You enrolled the course", 
-            data 
+            data : {
+                ...enrollmentData, 
+                paymentUrl
+            }
         },{status:201})
 
     } catch (error) {

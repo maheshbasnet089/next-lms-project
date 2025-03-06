@@ -25,5 +25,6 @@ export interface IEnrollment{
 
 export interface IInitialData{
     status : Status, 
-    enrollments : IEnrollment[]
+    enrollments : IEnrollment[], 
+    paymentUrl : null | string
 }

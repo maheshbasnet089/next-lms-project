@@ -1,6 +1,6 @@
 import { PaymentMethod } from "@/database/models/payment.schema"
 import { Status } from "@/store/category/types"
-import { enrollCourse } from "@/store/courses/courseSlice"
+import { enrollCourse } from "@/store/enrollments/enrollmentSlice"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { ChangeEvent, useEffect, useState } from "react"
 
@@ -13,7 +13,7 @@ interface IModalProps{
     const dispatch = useAppDispatch()
     const [loading,setLoading] = useState(false)
     const [whatsapp, setWhatsapp] = useState<string>("")
-    const {status} = useAppSelector((store)=>store.courses)
+  const {status,paymentUrl} = useAppSelector((store)=>store.enrollments)
     const [paymentMethod,setPaymentMethod] = useState<PaymentMethod>(PaymentMethod.Esewa)
     const handleSubmit = async (e:ChangeEvent<HTMLFormElement>)=>{
         e.preventDefault()
@@ -24,9 +24,11 @@ interface IModalProps{
         if(status === Status.Success){
           setLoading(false)
           closeModal(); 
+          // window.open(paymentUrl as string,"_blank")
         //   dispatch(resetStatus())
         }
       },[status])
+      console.log(status,"STATUS")
       const handlePaymentChange = (e:ChangeEvent<HTMLSelectElement>)=>{
         setPaymentMethod(e.target.value as PaymentMethod)
       }
